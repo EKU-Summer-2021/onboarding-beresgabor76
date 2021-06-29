@@ -1,7 +1,7 @@
 import unittest
 import urllib
 import pandas as pd
-from ..src.file_reader import read_file
+from src.file_reader import read_file
 
 
 class TestFileReading(unittest.TestCase):

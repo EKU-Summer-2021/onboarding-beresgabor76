@@ -1,14 +1,16 @@
+"""
+File reading module Issue#2
+"""
+
 import pandas as pd
 
 
 def read_file(url):
     """Reads in a csv file to a DataFrame from a specified url"""
-    df = pd.read_csv(url, header=None)
-    return df
+    result_df = pd.read_csv(url, header=None)
+    return result_df
 
 
-def print_summary(df):
+def print_summary(summarized_df):
     """Prints out the statistics of a DataFrame"""
-    print(df.describe())
-
-
+    print(summarized_df.describe())
