@@ -2,6 +2,7 @@
 Module for solving Cutting Stock Problem with Swarm Particle Optimization
 """
 
+import os
 import configparser
 import numpy as np
 import pandas as pd
@@ -27,7 +28,7 @@ class CuttingStock:
         self.__global_best_position = None
         self.__global_best_cost = 0
         config = configparser.ConfigParser()
-        config.read('config/cutting_stock.conf')
+        config.read(os.path.join(os.path.dirname(__file__), '../config', 'cutting_stock.conf'))
         self.__swarm_size = int(config['Parameters']['SwarmSize'])
         self.__iterations = int(config['Parameters']['Iterations'])
         self.__inertia = float(config['Parameters']['Inertia'])
