@@ -10,7 +10,7 @@ import pandas as pd
 
 class CuttingStock:
     """
-    Class for solving Cutting Stock Problem with Swarm Particle Optimization
+    Class for solving Cutting Stock Problem with Particle Swarm Optimization
     """
 
     def __init__(self, data_url, stock_size):
@@ -37,7 +37,7 @@ class CuttingStock:
 
     def initialize(self):
         """
-        Initializes arrays and variables for Swarm Particle Optimization algorithm
+        Initializes arrays and variables for Particle Swarm Optimization algorithm
         """
         logfile = os.path.join(os.path.dirname(__file__), '../log', 'cutting_stock.log')
         logging.basicConfig(level=logging.INFO,
@@ -59,26 +59,26 @@ class CuttingStock:
 
     def find_best_solution(self):
         """
-        Runs Swarm Particle Optimization algorithm
+        Runs Particle Swarm Optimization algorithm
         """
-        logging.info("\nSolutions in 0. iteration:\n" +
+        logging.info("\nSolutions in 0. iteration: \n%s",
                      self.__solutions_from_position_mx(self.__position_mx))
         for i in range(self.__iterations):
             self.__calculate_cost_amd_update_best_positions()
             self.__select_global_best()
-            logging.info("\nBest solutions in " + str(i) + ". iteration:\n" +
+            logging.info("\nBest solutions in %s. iteration:\n%s", str(i),
                          self.__solutions_from_position_mx(self.__best_position_mx))
-            logging.info("\nBest costs in " + str(i) + ". iteration:\n" +
+            logging.info("\nBest costs in %s. iteration:\n%s", str(i),
                          str(self.__best_cost_mx))
             self.__calculate_new_velocities()
             self.__calculate_new_positions()
-            logging.info("\nSolutions in " + str(i + 1) + ". iteration:\n" +
+            logging.info("\nSolutions in %s. iteration:\n%s", str(i+1),
                          self.__solutions_from_position_mx(self.__position_mx))
         self.__calculate_cost_amd_update_best_positions()
         self.__select_global_best()
-        logging.info("\nBest solutions in last iteration:\n" +
+        logging.info("\nBest solutions in last iteration:\n%s",
                      self.__solutions_from_position_mx(self.__best_position_mx))
-        logging.info("\nBest costs in last iteration:\n" +
+        logging.info("\nBest costs in last iteration:\n%s",
                      str(self.__best_cost_mx))
 
     def __generate_initial_position_and_velocity(self):
@@ -190,14 +190,14 @@ class CuttingStock:
         """
         Prints out the 10 best solutions for cutting stock problem
         """
-        ix = np.argsort(self.__best_cost_mx)
-        if len(ix) > 10:
-            ix = ix[:10]
-        ordered_best_position_mx = self.__best_position_mx[ix]
+        ix_order = np.argsort(self.__best_cost_mx)
+        if len(ix_order) > 10:
+            ix_order = ix_order[:10]
+        ordered_best_position_mx = self.__best_position_mx[ix_order]
         print("Best solutions in ascending cost order:")
         print(self.__solutions_from_position_mx(ordered_best_position_mx))
         print("Best costs:")
-        print(self.__best_cost_mx[ix])
+        print(self.__best_cost_mx[ix_order])
         print("Global best solution:")
         print(self.__solution_from_position(self.__global_best_position))
         print("Global best cost:")
@@ -227,4 +227,3 @@ class CuttingStock:
             solution_ix += 1
         csv_file = os.path.join(os.path.dirname(__file__), '../solutions', 'cutting_stock.csv')
         results_df.to_csv(path_or_buf=csv_file)
-
