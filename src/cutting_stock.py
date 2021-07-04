@@ -1,7 +1,7 @@
 """
 Module for solving Cutting Stock Problem with Swarm Particle Optimization
 """
-
+import logging
 import os
 import configparser
 import numpy as np
@@ -39,6 +39,12 @@ class CuttingStock:
         """
         Initializes arrays and variables for Swarm Particle Optimization algorithm
         """
+        logfile = os.path.join(os.path.dirname(__file__), '../log', 'cutting_stock.log')
+        logging.basicConfig(level=logging.INFO,
+                            filename=logfile,
+                            format='%(asctime)s %(levelname)s {%(module)s} %(message)s',
+                            datefmt='%Y-%m-%d %H:%M:%S')
+        open(logfile, 'w').close()
         self.__initial_data = pd.read_csv(self.__data_url, names=['pieces', 'size'])
         for i in self.__initial_data.index:
             self.__count += self.__initial_data.loc[i, 'pieces']
@@ -55,29 +61,25 @@ class CuttingStock:
         """
         Runs Swarm Particle Optimization algorithm
         """
-        print("Positions in 0. iteration")
-        print(self.__position_mx)
+        logging.info("\nSolutions in 0. iteration:\n" +
+                     self.__solutions_from_position_mx(self.__position_mx))
         for i in range(self.__iterations):
             self.__calculate_cost_amd_update_best_positions()
             self.__select_global_best()
-            print("Best positions:")
-            print(self.__best_position_mx)
-            print("Best costs:")
-            print(self.__best_cost_mx)
+            logging.info("\nBest solutions in " + str(i) + ". iteration:\n" +
+                         self.__solutions_from_position_mx(self.__best_position_mx))
+            logging.info("\nBest costs in " + str(i) + ". iteration:\n" +
+                         str(self.__best_cost_mx))
             self.__calculate_new_velocities()
             self.__calculate_new_positions()
-            print("Positions in " + str(i + 1) + ". iteration")
-            print(self.__position_mx)
+            logging.info("\nSolutions in " + str(i + 1) + ". iteration:\n" +
+                         self.__solutions_from_position_mx(self.__position_mx))
         self.__calculate_cost_amd_update_best_positions()
         self.__select_global_best()
-        print("Best positions:")
-        print(self.__best_position_mx)
-        print("Best costs:")
-        print(self.__best_cost_mx)
-        print("Global best positions:")
-        print(self.__global_best_position)
-        print("Global best cost:")
-        print(self.__global_best_cost)
+        logging.info("\nBest solutions in last iteration:\n" +
+                     self.__solutions_from_position_mx(self.__best_position_mx))
+        logging.info("\nBest costs in last iteration:\n" +
+                     str(self.__best_cost_mx))
 
     def __generate_initial_position_and_velocity(self):
         """
@@ -163,14 +165,17 @@ class CuttingStock:
                     else:
                         self.__position_mx[i] = np.delete(new_position_row, piece_old_position + 1)
 
-    def print_solution(self):
-        """
-        Prints out the final cutting stock solution from global best position vector
-        """
+    def __solutions_from_position_mx(self, position_mx):
+        solution_mx = ""
+        for position in position_mx:
+            solution_mx += (self.__solution_from_position(position) + "\n")
+        return solution_mx[0:len(solution_mx)-1]
+
+    def __solution_from_position(self, position):
         sum_length = 0
         stock = []
         solution = []
-        for piece_length in self.__global_best_position:
+        for piece_length in position:
             if sum_length + piece_length <= self.__stock_size:
                 sum_length += piece_length
                 stock.append(piece_length)
@@ -179,5 +184,47 @@ class CuttingStock:
                 sum_length = piece_length
                 stock = [piece_length]
         solution.append(stock)
-        print("Best cutting stock solution:")
-        print(solution)
+        return str(solution)
+
+    def print_solutions(self):
+        """
+        Prints out the 10 best solutions for cutting stock problem
+        """
+        ix = np.argsort(self.__best_cost_mx)
+        if len(ix) > 10:
+            ix = ix[:10]
+        ordered_best_position_mx = self.__best_position_mx[ix]
+        print("Best solutions in ascending cost order:")
+        print(self.__solutions_from_position_mx(ordered_best_position_mx))
+        print("Best costs:")
+        print(self.__best_cost_mx[ix])
+        print("Global best solution:")
+        print(self.__solution_from_position(self.__global_best_position))
+        print("Global best cost:")
+        print(self.__global_best_cost)
+
+    def save_solutions_to_file(self):
+        """
+        Saves cutting stock best solutions to csv file
+        """
+        results_df = pd.DataFrame({'cost': self.__best_cost_mx})
+        for i in range(int(np.max(self.__best_cost_mx))):
+            results_df[str(i + 1)] = np.zeros(len(self.__best_cost_mx))
+        for solution_ix in range(len(self.__best_position_mx)):
+            sum_length = 0
+            stock = []
+            stock_ix = 1
+            for piece_length in self.__best_position_mx[solution_ix]:
+                if sum_length + piece_length <= self.__stock_size:
+                    sum_length += piece_length
+                    stock.append(piece_length)
+                else:
+                    results_df.iloc[solution_ix, stock_ix] = str(stock)
+                    stock_ix += 1
+                    sum_length = piece_length
+                    stock = [piece_length]
+            results_df.iloc[solution_ix, stock_ix] = str(stock)
+            solution_ix += 1
+        csv_file = os.path.join(os.path.dirname(__file__), '../solutions', 'cutting_stock.csv')
+        results_df.to_csv(path_or_buf=csv_file)
+

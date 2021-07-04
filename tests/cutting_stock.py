@@ -24,7 +24,7 @@ class TestCuttingStock(unittest.TestCase):
                                               np.around(self.csp._CuttingStock__velocity_mx)))
         self.assertEqual(True, self.csp._CuttingStock__best_position_mx.all())
         self.assertEqual(True, self.csp._CuttingStock__best_cost_mx.all())
-        self.assertEqual(False, self.csp._CuttingStock__global_best_position.all())
+        self.assertEqual(False, self.csp._CuttingStock__global_best_position.any())
         self.assertEqual(self.csp._CuttingStock__count, self.csp._CuttingStock__global_best_cost)
 
     def test_calculate_cost_and_update_best_positions(self):
