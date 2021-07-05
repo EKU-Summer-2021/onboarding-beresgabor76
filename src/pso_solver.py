@@ -14,7 +14,7 @@ class PsoSolver:
 
     def __init__(self, problem):
         """
-        Constructor for PSO class, input parameter: problem to solve
+        Constructor for PSO class, input parameter: problem to solve, logger odject
         """
         config = configparser.ConfigParser()
         config.read(os.path.join(os.path.dirname(__file__), '../config', 'cutting_stock.conf'))
@@ -37,12 +37,11 @@ class PsoSolver:
         """
         Runs Particle Swarm Optimization algorithm
         """
-        logfile = os.path.join(os.path.dirname(__file__), '../log', 'cutting_stock.log')
         logging.basicConfig(level=logging.INFO,
-                            filename=logfile,
+                            filename=self.__problem.logfile,
                             format='%(asctime)s %(levelname)s {%(module)s} %(message)s',
-                            datefmt='%Y-%m-%d %H:%M:%S')
-        open(logfile, 'w').close()
+                            datefmt='%Y-%m-%d %H:%M:%S')        
+        open(self.__problem.logfile, 'w').close()
         self.__generate_initial_position_and_velocity()
         logging.info("\nSolutions in 0. iteration: \n%s",
                      self.__problem.solutions_from_position_mx(self.__position_mx))
@@ -74,7 +73,9 @@ class PsoSolver:
                 while self.__position_mx[particle_ix, piece_ix] != 0:
                     piece_ix = np.random.randint(self.__count)
                 self.__position_mx[particle_ix, piece_ix] = size
-                self.__velocity_mx[particle_ix, piece_ix] = np.random.randint(self.__count)
+                new_piece_ix = np.random.randint(self.__count)
+                velocity = new_piece_ix - piece_ix
+                self.__velocity_mx[particle_ix, piece_ix] = velocity
         self.__best_position_mx = np.copy(self.__position_mx)
 
     def __calculate_cost_amd_update_best_positions(self):
@@ -134,10 +135,10 @@ class PsoSolver:
                     piece_length = self.__position_mx[i, j]
                     piece_old_position = j
                     piece_new_position = int(j + move)
-                    while piece_new_position < 0:
-                        piece_new_position += self.__count
-                    while piece_new_position >= self.__count:
-                        piece_new_position -= self.__count
+                    if piece_new_position < 0:
+                        piece_new_position = 0
+                    if piece_new_position > self.__count - 1:
+                        piece_new_position = self.__count - 1
                     new_position_row = np.insert(
                         self.__position_mx[i], piece_new_position, piece_length)
                     if piece_new_position > piece_old_position:

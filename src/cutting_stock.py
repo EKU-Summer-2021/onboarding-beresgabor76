@@ -35,6 +35,7 @@ class CuttingStockProblem:
         if stock_size < np.max(self.initial_position):
             print('There are longer pieces than the given stock size!')
             exit(1)
+        self.logfile = os.path.join(os.path.dirname(__file__), '../log', 'cutting_stock.log')
 
     def solutions_from_position_mx(self, position_mx):
         """
