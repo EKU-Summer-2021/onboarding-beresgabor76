@@ -1,5 +1,7 @@
 import unittest
+import os
 import numpy as np
+import pandas as pd
 from src.cutting_stock import CuttingStockProblem
 
 
@@ -22,6 +24,13 @@ class TestCuttingStockProblem(unittest.TestCase):
     def test_solution_from_position(self):
         test_mx = np.array([1, 2, 51, 52])
         self.assertEqual("[[1, 2, 51], [52]]", self.csp.solution_from_position(test_mx))
+
+    def test_save_solutions_to_file(self):
+        test_mx = np.array([[1, 2, 51, 52]])
+        cost = np.array([2])
+        self.csp.save_solutions_to_file(test_mx, cost, 'test.csv')
+        df = pd.read_csv(os.path.join(os.path.dirname(__file__), '../solutions', 'test.csv'))
+        self.assertEqual(False, df.empty)
 
 
 if __name__ == '__main__':

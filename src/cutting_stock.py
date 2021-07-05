@@ -36,14 +36,6 @@ class CuttingStockProblem:
             print('There are longer pieces than the given stock size!')
             exit(1)
 
-    def is_solvable(self):
-        """
-        Returns True if the problem is solvable with the given data
-        """
-        if self.count > 0 and self.stock_size >= np.max(self.initial_position):
-            return True
-        return False
-
     def solutions_from_position_mx(self, position_mx):
         """
         Creates cutting stock solutions' matrix from Solver data representation
