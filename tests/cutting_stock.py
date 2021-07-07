@@ -13,23 +13,44 @@ class TestCuttingStockProblem(unittest.TestCase):
             stock_size=60)
 
     def test_init(self):
-        self.assertEqual(60, self.csp.stock_size)
-        self.assertEqual(13, self.csp.count)
-        np.allclose(np.array([22., 22., 36., 36., 34., 34., 19., 19., 19., 19., 32., 32., 32.]),
-                              self.csp.initial_position)
+        #given
+        EXPECTED_STOCK_SIZE = 60
+        EXPECTED_PIECE_COUNT = 13
+        EXPECTED_INITIAL_POSITION = np.array([22., 22., 36., 36., 34., 34., 19., 19., 19., 19., 32., 32., 32.])
+        #when
+        ACTUAL_STOCK_SIZE = self.csp.stock_size
+        ACTUAL_PIECE_COUNT = self.csp.count
+        ACTUAL_INITIAL_POSITION = self.csp.initial_position
+        #then
+        self.assertEqual(EXPECTED_STOCK_SIZE, ACTUAL_STOCK_SIZE)
+        self.assertEqual(EXPECTED_PIECE_COUNT, ACTUAL_PIECE_COUNT)
+        np.allclose(EXPECTED_INITIAL_POSITION, ACTUAL_INITIAL_POSITION)
 
     def test_solutions_from_position_mx(self):
-        test_mx = np.array([[1, 2], [51, 52]])
-        self.assertEqual("[[1, 2]]\n[[51], [52]]", self.csp.solutions_from_position_mx(test_mx))
+        #given
+        POSITION_MX = np.array([[1, 2], [51, 52]])
+        EXPECTED_SOLUTION = "[[1, 2]]\n[[51], [52]]"
+        #when
+        ACTUAL_SOLUTION = self.csp.solutions_from_position_mx(POSITION_MX)
+        #then
+        self.assertEqual(EXPECTED_SOLUTION, ACTUAL_SOLUTION)
 
     def test_solution_from_position(self):
-        test_mx = np.array([1, 2, 51, 52])
-        self.assertEqual("[[1, 2, 51], [52]]", self.csp.solution_from_position(test_mx))
+        #given
+        POSITION = np.array([1, 2, 51, 52])
+        EXPECTED_SOLUTION = "[[1, 2, 51], [52]]"
+        #when
+        ACTUAL_SOLUTION = self.csp.solution_from_position(POSITION)
+        #then
+        self.assertEqual(EXPECTED_SOLUTION, ACTUAL_SOLUTION)
 
     def test_save_solutions_to_file(self):
-        test_mx = np.array([[1, 2, 51, 52]])
-        cost = np.array([2])
-        self.csp.save_solutions_to_file(test_mx, cost, 'test.csv')
+        #given
+        TEST_POSITION_MX = np.array([[1, 2, 51, 52]])
+        TEST_COST_MX = np.array([2])
+        #when
+        self.csp.save_solutions_to_file(TEST_POSITION_MX, TEST_COST_MX, 'test.csv')
+        #then
         df = pd.read_csv(os.path.join(os.path.dirname(__file__), '../solutions', 'test.csv'))
         self.assertEqual(2, df.iloc[0, 0])
         self.assertEqual(str([1, 2, 51]), df.iloc[0, 1])

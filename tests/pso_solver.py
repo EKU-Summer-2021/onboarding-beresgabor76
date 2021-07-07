@@ -32,81 +32,111 @@ class TestPsoSolver(unittest.TestCase):
         self.assertEqual(self.solver._PsoSolver__count, self.solver._PsoSolver__global_best_cost)
 
     def test_generate_initial_position_and_velocity(self):
+        #given
         self.solver._PsoSolver__initialize_solver(self.csp)
         self.solver._PsoSolver__generate_initial_position_and_velocity()
-        expected_pos_mx = np.array([[32., 19., 19., 19., 36., 32., 22., 36., 32., 34., 34., 19., 22.],
-                                    [32., 19., 19., 19., 34., 32.,36., 32., 34., 22., 22., 36., 19.],
-                                    [34., 19., 34., 32., 19., 32., 22., 22., 19., 19., 36., 36., 32.],
-                                    [19., 34., 32., 22., 32., 34., 22., 32., 19., 19., 36., 19., 36.],
-                                    [34., 19., 22., 34., 19., 19., 19., 36., 32., 32., 36., 22., 32.]])
-        np.allclose(expected_pos_mx, self.solver._PsoSolver__position_mx)
-        np.allclose(expected_pos_mx, self.solver._PsoSolver__best_position_mx)
-        expected_vel_mx = np.array([[11., 6., 3., 4., 2., 7., - 3., 5., - 8., - 7., 0., - 6., - 2.],
-                                    [8., 2., - 2., 8., - 2., 0., - 3., - 4., - 6., 2., 0., - 9., - 5.],
-                                    [7., - 1.,  0.,  9.,  5., 5., 2., - 7., - 1., - 1., - 8., - 4., - 10.],
-                                    [0., 8., 4., 1., - 4., 6., 0., 3., - 4., - 3., - 8., 0., - 2.],
-                                    [9., 0., 7., - 3., - 4.,  1., - 5., 1., 3., - 4., - 5., - 4., - 10.]])
-        np.allclose(expected_vel_mx, self.solver._PsoSolver__velocity_mx)
+        EXPECTED_POSITION_MX = np.array([[32., 19., 19., 19., 36., 32., 22., 36., 32., 34., 34., 19., 22.],
+                                        [32., 19., 19., 19., 34., 32.,36., 32., 34., 22., 22., 36., 19.],
+                                        [34., 19., 34., 32., 19., 32., 22., 22., 19., 19., 36., 36., 32.],
+                                        [19., 34., 32., 22., 32., 34., 22., 32., 19., 19., 36., 19., 36.],
+                                        [34., 19., 22., 34., 19., 19., 19., 36., 32., 32., 36., 22., 32.]])
+        EXPECTED_VELOCITY_MX = np.array([[11., 6., 3., 4., 2., 7., - 3., 5., - 8., - 7., 0., - 6., - 2.],
+                                        [8., 2., - 2., 8., - 2., 0., - 3., - 4., - 6., 2., 0., - 9., - 5.],
+                                        [7., - 1.,  0.,  9.,  5., 5., 2., - 7., - 1., - 1., - 8., - 4., - 10.],
+                                        [0., 8., 4., 1., - 4., 6., 0., 3., - 4., - 3., - 8., 0., - 2.],
+                                        [9., 0., 7., - 3., - 4.,  1., - 5., 1., 3., - 4., - 5., - 4., - 10.]])
+        #when
+        ACTUAL_POSITION_MX = self.solver._PsoSolver__position_mx
+        ACTUAL_BEST_POSITION_MX = self.solver._PsoSolver__best_position_mx
+        ACTUAL_VELOCITY_MX = self.solver._PsoSolver__velocity_mx
+        #then
+        np.allclose(EXPECTED_POSITION_MX, ACTUAL_POSITION_MX)
+        np.allclose(EXPECTED_POSITION_MX, ACTUAL_BEST_POSITION_MX)
+        np.allclose(EXPECTED_VELOCITY_MX, ACTUAL_VELOCITY_MX)
 
     def test_calculate_cost_and_update_best_positions(self):
+        #given
         self.solver._PsoSolver__initialize_solver(self.csp)
         self.solver._PsoSolver__generate_initial_position_and_velocity()
         self.solver._PsoSolver__calculate_cost_amd_update_best_positions()
-        expected_cost_mx = np.array([9., 9., 8., 7., 8.])
-        np.allclose(expected_cost_mx, self.solver._PsoSolver__best_cost_mx)
-        expected_pos_mx = np.array([[32., 19., 19., 19., 36., 32., 22., 36., 32., 34., 34., 19., 22.],
-                                    [32., 19., 19., 19., 34., 32., 36., 32., 34., 22., 22., 36., 19.],
-                                    [34., 19., 34., 32., 19., 32., 22., 22., 19., 19., 36., 36., 32.],
-                                    [19., 34., 32., 22., 32., 34., 22., 32., 19., 19., 36., 19., 36.],
-                                    [34., 19., 22., 34., 19., 19., 19., 36., 32., 32., 36., 22., 32.]])
-        np.allclose(expected_pos_mx, self.solver._PsoSolver__best_position_mx)
+        EXPECTED_COST_MX = np.array([9., 9., 8., 7., 8.])
+        EXPECTED_POSITION_MX = np.array([[32., 19., 19., 19., 36., 32., 22., 36., 32., 34., 34., 19., 22.],
+                                        [32., 19., 19., 19., 34., 32., 36., 32., 34., 22., 22., 36., 19.],
+                                        [34., 19., 34., 32., 19., 32., 22., 22., 19., 19., 36., 36., 32.],
+                                        [19., 34., 32., 22., 32., 34., 22., 32., 19., 19., 36., 19., 36.],
+                                        [34., 19., 22., 34., 19., 19., 19., 36., 32., 32., 36., 22., 32.]])
+        #when
+        ACTUAL_COST_MX = self.solver._PsoSolver__best_cost_mx
+        ACTUAL_POSITION_MX = self.solver._PsoSolver__best_position_mx
+        #then
+        np.allclose(EXPECTED_COST_MX, ACTUAL_COST_MX)
+        np.allclose(EXPECTED_POSITION_MX, ACTUAL_POSITION_MX)
 
     def test_select_global_best(self):
+        #given
         self.solver._PsoSolver__initialize_solver(self.csp)
         self.solver._PsoSolver__generate_initial_position_and_velocity()
         self.solver._PsoSolver__calculate_cost_amd_update_best_positions()
         self.solver._PsoSolver__select_global_best()
-        self.assertEqual(7., self.solver._PsoSolver__global_best_cost)
-        expected_global_best_pos = np.array([19., 34., 32., 22., 32., 34., 22., 32., 19., 19., 36., 19., 36.])
-        np.allclose(expected_global_best_pos, self.solver._PsoSolver__global_best_position)
+        EXPECTED_GLOBAL_BEST_COST = 7.0
+        EXPECTED_GLOBAL_BEST_POSITION = np.array([19., 34., 32., 22., 32., 34., 22., 32., 19., 19., 36., 19., 36.])
+        #when
+        ACTUAL_GLOBAL_BEST_COST = self.solver._PsoSolver__global_best_cost
+        ACTUAL_GLOBAL_BEST_POSITION = self.solver._PsoSolver__global_best_position
+        #then
+        self.assertEqual(EXPECTED_GLOBAL_BEST_COST, ACTUAL_GLOBAL_BEST_COST)
+        np.allclose(EXPECTED_GLOBAL_BEST_POSITION, ACTUAL_GLOBAL_BEST_POSITION)
 
     def test_calculate_new_velocities(self):
+        #given
         self.solver._PsoSolver__initialize_solver(self.csp)
         self.solver._PsoSolver__generate_initial_position_and_velocity()
         self.solver._PsoSolver__calculate_cost_amd_update_best_positions()
         self.solver._PsoSolver__select_global_best()
-        expected_vel_mx = [[  1., 8., 6., 3., -0., 4., -2., 1., -8., -9., 1., -3., 4.],
+        self.solver._PsoSolver__calculate_new_velocities()
+        EXPECTED_VELOCITY_MX = [[  1., 8., 6., 3., -0., 4., -2., 1., -8., -9., 1., -3., 4.],
                             [ -0., 6., 3., 5., -2., 1., -6., -2., -8., -0., 5., -10., 3.],
                             [ -2., 5., -1., 1., 7., 3., 1., -0., -0., -0., -4., -8., -4.],
                             [  0., 4., 2., 0., -2., 3., 0., 2., -2., -2., -4., 0., -1.],
                             [ -1., 5., 7., -6., 2., 6., -1., -1., -3., -6., -2., -3., -4.]]
-        self.solver._PsoSolver__calculate_new_velocities()
-        np.allclose(expected_vel_mx, self.solver._PsoSolver__velocity_mx)
+        #when
+        ACTUAL_VELOCITY_MX = self.solver._PsoSolver__velocity_mx
+        #then
+        np.allclose(EXPECTED_VELOCITY_MX, ACTUAL_VELOCITY_MX)
 
     def test_calculate_new_positions(self):
+        #given
         self.solver._PsoSolver__initialize_solver(self.csp)
         self.solver._PsoSolver__generate_initial_position_and_velocity()
         self.solver._PsoSolver__calculate_cost_amd_update_best_positions()
         self.solver._PsoSolver__select_global_best()
         self.solver._PsoSolver__calculate_new_velocities()
         self.solver._PsoSolver__calculate_new_positions()
-        expected_pos_mx = np.array([[34.,  32.,  32.,  19.,  36.,  22.,  19.,  36.,  19.,  32.,  19.,  34.,  22., ],
-                                    [34.,  22.,  32.,  32.,  19.,  36.,  34.,  32.,  19.,  19.,  22.,  36.,  19., ],
-                                    [34.,  32.,  34.,  36.,  19.,  19.,  22.,  32.,  32.,  19.,  22.,  19.,   36., ],
-                                    [19.,  32.,  34.,  32.,  22.,  22.,  36.,  34.,  19.,  32.,  19.,  36.,  19., ],
-                                    [19.,  34.,  22.,  36.,  19.,  19.,  32.,  32.,  32.,  22.,  19.,  34.,  36., ]])
-        np.allclose(expected_pos_mx,  self.solver._PsoSolver__position_mx)
+        EXPECTED_POSITION_MX = np.array([[34.,  32.,  32.,  19.,  36.,  22.,  19.,  36.,  19.,  32.,  19.,  34.,  22., ],
+                                        [34.,  22.,  32.,  32.,  19.,  36.,  34.,  32.,  19.,  19.,  22.,  36.,  19., ],
+                                        [34.,  32.,  34.,  36.,  19.,  19.,  22.,  32.,  32.,  19.,  22.,  19.,   36., ],
+                                        [19.,  32.,  34.,  32.,  22.,  22.,  36.,  34.,  19.,  32.,  19.,  36.,  19., ],
+                                        [19.,  34.,  22.,  36.,  19.,  19.,  32.,  32.,  32.,  22.,  19.,  34.,  36., ]])
+        #when
+        ACTUAL_POSITION_MX = self.solver._PsoSolver__position_mx
+        #then
+        np.allclose(EXPECTED_POSITION_MX, ACTUAL_POSITION_MX)
 
     def test_solve(self):
+        #given
         self.solver.solve(self.csp)
         expected_best_cost_mx = np.array([8., 7., 8., 7., 7.])        
         np.allclose(expected_best_cost_mx, self.solver._PsoSolver__best_cost_mx)
-        expected_best_pos_mx = np.array([[34., 32., 32., 19., 36., 22., 19., 36., 19., 32., 19., 34., 22.],
+        EXPECTED_BEST_POSITION_MX = \
+                                np.array([[34., 32., 32., 19., 36., 22., 19., 36., 19., 32., 19., 34., 22.],
                                         [22., 36., 22., 34., 32., 19., 36., 19., 32., 19., 34., 32., 19.],
                                         [34., 19., 34., 32., 19., 32., 22., 22., 19., 19., 36., 36., 32.],
                                         [19., 34., 32., 22., 32., 34., 22., 32., 19., 19., 36., 19., 36.],
                                         [19., 32., 22., 36., 32., 19., 19., 36., 19., 34., 34., 22., 32.]])
-        np.allclose(expected_best_pos_mx, self.solver._PsoSolver__best_position_mx)
+        #when
+        ACTUAL_BEST_POSITION_MX = self.solver._PsoSolver__best_position_mx
+        #then
+        np.allclose(EXPECTED_BEST_POSITION_MX, ACTUAL_BEST_POSITION_MX)
 
 if __name__ == '__main__':
     unittest.main()
