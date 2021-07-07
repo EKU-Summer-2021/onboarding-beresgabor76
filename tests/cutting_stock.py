@@ -14,8 +14,9 @@ class TestCuttingStockProblem(unittest.TestCase):
 
     def test_init(self):
         self.assertEqual(60, self.csp.stock_size)
-        self.assertEqual(True, self.csp.count > 0)
-        self.assertEqual(True, self.csp.initial_position.all())
+        self.assertEqual(13, self.csp.count)
+        np.allclose(np.array([22., 22., 36., 36., 34., 34., 19., 19., 19., 19., 32., 32., 32.]),
+                              self.csp.initial_position)
 
     def test_solutions_from_position_mx(self):
         test_mx = np.array([[1, 2], [51, 52]])
@@ -30,7 +31,10 @@ class TestCuttingStockProblem(unittest.TestCase):
         cost = np.array([2])
         self.csp.save_solutions_to_file(test_mx, cost, 'test.csv')
         df = pd.read_csv(os.path.join(os.path.dirname(__file__), '../solutions', 'test.csv'))
-        self.assertEqual(False, df.empty)
+        self.assertEqual(2, df.iloc[0, 0])
+        self.assertEqual(str([1, 2, 51]), df.iloc[0, 1])
+        self.assertEqual(str([52]), df.iloc[0, 2])
+
 
 
 if __name__ == '__main__':

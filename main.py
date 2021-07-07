@@ -11,7 +11,7 @@ if __name__ == '__main__':
     cutting_stock = CuttingStockProblem(data_url="https://raw.githubusercontent.com/EKU-Summer-2021/intelligent_system_data/" +
                                           "main/Intelligent%20System%20Data/CSP/CSP_360.csv",
                                         stock_size=60)
-    solver = PsoSolver(cutting_stock)
-    solver.solve()
+    solver = PsoSolver()
+    solver.solve(cutting_stock)
     solver.print_solutions()
     solver.save_solutions('cutting_stock.csv')

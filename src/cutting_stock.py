@@ -87,4 +87,4 @@ class CuttingStockProblem:
             results_df.iloc[solution_ix, stock_ix] = str(stock)
             solution_ix += 1
         csv_file = os.path.join(os.path.dirname(__file__), '../solutions', filename)
-        results_df.to_csv(path_or_buf=csv_file)
+        results_df.to_csv(path_or_buf=csv_file, index=False)

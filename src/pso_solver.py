@@ -12,7 +12,7 @@ class PsoSolver:
     Class for solving problems with Particle Swarm Optimization
     """
 
-    def __init__(self, problem):
+    def __init__(self):
         """
         Constructor for PSO class, input parameter: problem to solve, logger odject
         """
@@ -23,20 +23,23 @@ class PsoSolver:
         self.__inertia = float(config['Parameters']['Inertia'])
         self.__accel_best = float(config['Parameters']['AccelerationBest'])
         self.__accel_global_best = float(config['Parameters']['AccelerationGlobalBest'])
-        self.__problem = problem
-        self.__count = problem.count
-        self.__position_mx = np.zeros((self.__swarm_size, self.__count))
-        self.__velocity_mx = np.zeros((self.__swarm_size, self.__count))
-        self.__best_position_mx = np.zeros((self.__swarm_size, self.__count))
-        self.__best_cost_mx = np.fromiter(
-            (self.__count for _ in range(self.__swarm_size)), float)
-        self.__global_best_position = np.zeros((self.__count,))
-        self.__global_best_cost = self.__count
+        self.__problem = None
+        self.__count = 0
+        self.__position_mx = None
+        self.__velocity_mx = None
+        self.__best_position_mx = None
+        self.__best_cost_mx = None
+        self.__global_best_position = None
+        self.__global_best_cost = 0
 
-    def solve(self):
+    def solve(self, problem, random_seed=None):
         """
         Runs Particle Swarm Optimization algorithm
         """
+        self.__problem = problem
+        self.__initialize_solver()
+        if random_seed is not None:
+            np.random.seed(random_seed)
         logging.basicConfig(level=logging.INFO,
                             filename=self.__problem.logfile,
                             format='%(asctime)s %(levelname)s {%(module)s} %(message)s',
@@ -62,6 +65,18 @@ class PsoSolver:
                      self.__problem.solutions_from_position_mx(self.__best_position_mx))
         logging.info("\nBest costs in last iteration:\n%s",
                      str(self.__best_cost_mx))
+
+    def __initialize_solver(self, problem=None):
+        if problem is not None:
+            self.__problem = problem
+        self.__count = self.__problem.count
+        self.__position_mx = np.zeros((self.__swarm_size, self.__count))
+        self.__velocity_mx = np.zeros((self.__swarm_size, self.__count))
+        self.__best_position_mx = np.zeros((self.__swarm_size, self.__count))
+        self.__best_cost_mx = np.fromiter(
+            (self.__count for _ in range(self.__swarm_size)), float)
+        self.__global_best_position = np.zeros((self.__count,))
+        self.__global_best_cost = self.__count
 
     def __generate_initial_position_and_velocity(self):
         """
