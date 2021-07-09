@@ -25,7 +25,8 @@ class HotStuff:
         Returns the number of songs that hit the podium but didn't reach No.1
         """
         return self.__data.groupby('SongID')[['SongID', 'Peak Position']]\
-            .filter(lambda data: ((data['Peak Position'] == 2).all() | (data['Peak Position'] == 3).all()))\
+            .filter(lambda data: ((data['Peak Position'] == 2).all()
+                                  | (data['Peak Position'] == 3).all()))\
             .count()['SongID']
 
     def artists_with_the_same_song(self, song):
@@ -35,3 +36,25 @@ class HotStuff:
         return self.__data.groupby('Performer')[['Performer', 'Song']]\
             .filter(lambda data: ((data['Song'] == song).any()))['Performer']\
             .nunique()
+
+    def song_on_the_chart_most_weeks(self):
+        """
+        Returns the song name that hit the chart the most weeks
+        """
+        max_weeks = self.__data.groupby('SongID').count().max()[0]
+        hits = self.__data.groupby(['SongID', 'Song'])['SongID'].count()
+        for hit in list(hits.items()):
+            if hit[1] == max_weeks:
+                return hit[0][1]
+
+    def artist_with_the_most_song(self):
+        """
+        Returns the artist that has the most different songs that hit the chart
+        """
+        performers = self.__data.groupby(['Performer'])['Performer'].nunique()
+        performers -= 1
+        hits = self.__data.groupby(['Performer', 'SongID'])['SongID']
+        for (hit, value) in hits:
+            performers[performers.index == hit[0]] += 1
+        max_songs = performers.max()
+        return performers[performers == max_songs].index[0]

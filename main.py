@@ -24,4 +24,11 @@ if __name__ == '__main__':
     #Task3
     hit_song = "Don't Just Stand There"
     number_of_artists = hot_stuff.artists_with_the_same_song(hit_song)
-    print("Number of artist with song name " + hit_song + ": " + str(number_of_artists))
+    print("Number of artists with song name " + hit_song + ": " + str(number_of_artists))
+    #Task4
+    hit_song = hot_stuff.song_on_the_chart_most_weeks()
+    print("The song hit the chart most weeks: " + hit_song)
+    #Task5
+    artist = hot_stuff.artist_with_the_most_song()
+    print("The artist with the most different songs hit the chart: " + artist)
+
