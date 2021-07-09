@@ -48,6 +48,14 @@ class TestHotStuff(unittest.TestCase):
         #then
         self.assertEqual(EXPECTED, ACTUAL)
 
+    def test_artist_with_the_most_no1_weeks(self):
+        #given
+        EXPECTED = 'Mariah Carey'
+        #when
+        ACTUAL = self.__hot_stuff.artist_with_the_most_no1_weeks()
+        #then
+        self.assertEqual(EXPECTED, ACTUAL)
+
 
 if __name__ == '__main__':
     unittest.main()

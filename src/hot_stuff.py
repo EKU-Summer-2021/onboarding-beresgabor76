@@ -58,3 +58,13 @@ class HotStuff:
             performers[performers.index == hit[0]] += 1
         max_songs = performers.max()
         return performers[performers == max_songs].index[0]
+
+    def artist_with_the_most_no1_weeks(self):
+        """
+        Returns the performer who hit the chart at No.1 the most weeks
+        """
+        hits = self.__data.loc[self.__data['Week Position'] == 1,
+                               ['Performer', 'SongID', 'Week Position']]
+        performers_hits = hits.groupby(['Performer'])['Performer'].count()
+        max_performers_hits = performers_hits.max()
+        return performers_hits[performers_hits == max_performers_hits].index[0]

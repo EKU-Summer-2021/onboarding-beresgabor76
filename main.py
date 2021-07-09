@@ -31,4 +31,6 @@ if __name__ == '__main__':
     #Task5
     artist = hot_stuff.artist_with_the_most_song()
     print("The artist with the most different songs hit the chart: " + artist)
-
+    #Task6
+    artist = hot_stuff.artist_with_the_most_no1_weeks()
+    print("The artist who hit the chart at No.1 most weeks: " + artist)
