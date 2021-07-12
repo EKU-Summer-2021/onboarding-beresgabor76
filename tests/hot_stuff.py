@@ -17,7 +17,7 @@ class TestHotStuff(unittest.TestCase):
 
     def test_songs_hit_podium_but_not_no1(self):
         #given
-        EXPECTED = 614
+        EXPECTED = 992
         #when
         ACTUAL = self.__hot_stuff.songs_hit_podium_but_not_no1()
         # then

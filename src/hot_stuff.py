@@ -25,9 +25,10 @@ class HotStuff:
         Returns the number of songs that hit the podium but didn't reach No.1
         """
         return self.__data.groupby('SongID')[['SongID', 'Peak Position']]\
-            .filter(lambda data: ((data['Peak Position'] == 2).all()
-                                  | (data['Peak Position'] == 3).all()))\
-            .count()['SongID']
+            .filter(lambda data: (((data['Peak Position'] == 2).any()
+                                  | (data['Peak Position'] == 3).any())
+                                  & (data['Peak Position'] != 1).all()))\
+            .nunique()['SongID']
 
     def artists_with_the_same_song(self, song):
         """

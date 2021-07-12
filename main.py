@@ -14,6 +14,7 @@ if __name__ == '__main__':
 
     print('\nAnalyzing hot_stuff.csv data file')
     hot_stuff = HotStuff()
+
     #Task1
     hit_song = 'One Sweet Day'
     number_one_weeks = hot_stuff.weeks_of_number_one_hit(hit_song)
